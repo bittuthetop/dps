@@ -24,6 +24,8 @@ package com.example.dps.controller;
 
 
 import com.example.dps.repository.ClassRoomRepository;
+import com.example.dps.repository.EmployeeRepository;
+import com.example.dps.service.EmployeeService;
 import com.example.dps.service.StudentService;
 
 import java.util.List;
@@ -56,6 +58,11 @@ public class MyController {
 
   @Autowired
    private ClassRoomRepository classRoomRepository;
+  
+  @Autowired 
+  private EmployeeService employeeService;
+  
+  
 
     @GetMapping("/home")
     public String home() {
@@ -189,6 +196,43 @@ ClassRoom classRoom = classRoomRepository.findById(classId).orElse(null);
     }
     
 	
+    
+    @GetMapping("/addEmployee")
+    public String addEmployee() {
+    	return "addEmployee";
+    }
+    
+    @PostMapping("/addEmployee")
+    public String addEmployeeTodatabase(@RequestParam String empid,@RequestParam String name,
+    		@RequestParam  String email,@RequestParam String phone) {
+    	
+    	Employee emp = new Employee();
+    	
+    	emp.setEmpId(empid);
+    	emp.setEmpEmail(email);
+    	emp.setEmpName(name);
+    	emp.setMob(phone);
+    	
+    	
+    	employeeService.saveEmployee(emp);
+    	
+    	
+    	
+    	return "success";
+    	
+    }
+    @GetMapping("/seeEmployee")
+    public String seeAllEmployee(Model model) {
+    	List<Employee> employees = employeeService.findAllEmployee();
+    	model.addAttribute("employees",employees);
+    	return "seeallemployees";
+    }
+    
+    
+    
+    
+    
+    
     
     
          
